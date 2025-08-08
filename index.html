@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>15:20:29 | 時刻表示タブ</title>
+  <title>--:--:-- | 時刻表示タブ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -98,13 +98,24 @@
       document.title = format;
     }
 
+    // 再帰的に1秒ごとにupdateClockを呼ぶ
+    function startClockLoop() {
+      updateClock();
+      setTimeout(startClockLoop, 1000);
+    }
+
     // 入力欄の変更を監視
     document.getElementById('formatInput').addEventListener('input', updateClock);
 
-    // 1秒ごとに更新
-    setInterval(updateClock, 1000);
+    // タブがアクティブになった時に即時更新
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        updateClock();
+      }
+    });
+
     // 初回実行
-    updateClock();
+    startClockLoop();
   </script>
 </body>
 </html>
